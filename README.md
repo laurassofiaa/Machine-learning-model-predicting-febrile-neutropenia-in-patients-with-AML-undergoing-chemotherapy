@@ -6,6 +6,7 @@ A machine learning pipeline for binary classification of febrile neutropenia (FN
 
 | File | Description |
 |------|-------------|
+| `Describing_variables_and_time-to-event-analyses`| Data analyses before model developing 
 | `AML_infection_model_data.ipynb` | Data preprocessing and preparation for modelling |
 | `AML_XGB_classifier_all_variables.ipynb` | XGBoost classifier trained on all features |
 | `SHAP_XGBClassifier_plot_function.R` | SHAP summary plots for the all-variable model |
@@ -20,6 +21,10 @@ A machine learning pipeline for binary classification of febrile neutropenia (FN
 ## Running Order
 
 The pipeline should be run in the following order. Steps grouped together belong to the same analysis stage.
+
+### Stage 0 -- Analyses before model developing
+
+0. **`Describing_variables_and_time-to-event-analyses`** -- Baseline characteristics and time-to-event analyses.
 
 ### Stage 1 -- Data preparation
 
