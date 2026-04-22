@@ -1,7 +1,5 @@
-### Codes for "Construction of a machine learning model predicting febrile neutropenia in patients with AML undergoing chemotherapy" ###
-
 # ---------
-# Figure 1A
+# Figure 2A
 # ---------
 
 g <- ggplot(df, 
@@ -35,8 +33,9 @@ g <- ggplot(df,
     legend.position = "bottom"
   )
 
+
 # ---------
-# Figure 1B
+# Figure 2B
 # ---------
 
 g <- ggplot(df, 
@@ -70,9 +69,10 @@ g <- ggplot(df,
     legend.position = "bottom"
   )
 
-# ---------
-# Figure 1C
-# ---------
+
+# ------------------------------------
+# Figure 2C and Supplementary Figure 3
+# ------------------------------------
 
 df_final <- df %>%                                                                             
   dplyr::select(id, cycle, cycle_nro, !!df1, !!df_3_min, !!df_3_max) %>%                                           
@@ -198,8 +198,9 @@ g <- ggplot(
     legend.box.margin = margin(-5, -5, -5, -5), 
   )
 
+
 # ---------
-# Figure 1D
+# Figure 2D
 # ---------
 
 cox_fun <- sapply(covariates,
@@ -316,12 +317,12 @@ g = ggplot(df1, aes(order1, p.value_scaled)) +
                    force = 20, 
                    force_pull = 20) 
 
+
 # ---------
-# Figure 1E
+# Figure 2E
 # ---------
 
 dfi = dfi %>% 
-  dplyr::select(id, infection_binary2, countdown1, countdown2, follow_up_period, cycle_IND, time_to_first_neutropenia) %>%
   dplyr::mutate(
     risk_group = case_when(
       time_to_first_neutropenia == 1 ~ "1 day",
@@ -376,18 +377,15 @@ g1 <- ggsurvplot(fit1,
                 legend = "top")
 
 g1$plot = g1$plot + 
-  scale_x_continuous(
-    breaks = seq(0, 28, by = 3),
-    labels = function(x) x + 1 # as the first day of the follow-up period was labeled as "Day 1" instead of "Day 0"
-  ) +
   annotate("text",
            x = 0.1, y = 0.1,
            size = 4,
            label = p_label1, parse = TRUE, hjust = 0) +
   guides(color = guide_legend(nrow = 1))
 
+
 # ---------
-# Figure 1F
+# Figure 2F
 # ---------
 
 dfk$tertile = cut(
@@ -398,7 +396,6 @@ dfk$tertile = cut(
 )
 
 dfk = dfk %>% 
-  dplyr::select(id, infection_binary2, countdown1, countdown2, follow_up_period, cycle_IND, time_to_first_neutropenia, tertile) %>%
   dplyr::mutate(
     risk_group = case_when(
       tertile == "low" ~ "≤11 days",
@@ -452,18 +449,15 @@ g2 <- ggsurvplot(fit2,
                 legend = "top")
 
 g2$plot = g2$plot + 
-  scale_x_continuous(
-    breaks = seq(0, 28, by = 3),
-    labels = function(x) x + 1
-  ) +
   annotate("text",
            x = 0.1, y = 0.1,
            size = 4,
            label = p_label2, parse = TRUE, hjust = 0) +
   guides(color = guide_legend(nrow = 1))
 
+
 # ---------
-# Figure 1G
+# Figure 2G
 # ---------
 
 dfi$tertile = cut(
@@ -474,7 +468,6 @@ dfi$tertile = cut(
 )
 
 dfi = dfi %>% 
-  dplyr::select(id, infection, follow_up_period, cycle, neutropenia_days_050, tertile) %>%
   dplyr::mutate( 
     risk_group2 = case_when(
       tertile == "low" ~ "T1:\n≤19 days",
@@ -529,18 +522,15 @@ g1 <- ggsurvplot(fit1,
                 legend = "top")
 
 g1$plot = g1$plot + 
-  scale_x_continuous(
-    breaks = seq(0, 28, by = 3),
-    labels = function(x) x + 1
-  ) +
   annotate("text",
            x = 0.1, y = 0.1,
            size = 4,
            label = p_label1, parse = TRUE, hjust = 0) +
   guides(color = guide_legend(nrow = 1))
 
+
 # ---------
-# Figure 1H
+# Figure 2H
 # ---------
 
 dfk$tertile = cut(
@@ -551,7 +541,6 @@ dfk$tertile = cut(
 )
 
 dfk = dfk %>% 
-  dplyr::select(id, infection, follow_up_period, cycle, neutropenia_days_050, tertile) %>%
   dplyr::mutate(
     risk_group2 = case_when(
       tertile == "low" ~ "T1:\n≤9 days",
@@ -607,15 +596,12 @@ g2 <- ggsurvplot(fit2,
                 legend = "top")
 
 g2$plot = g2$plot + 
-  scale_x_continuous(
-    breaks = seq(0, 28, by = 3),
-    labels = function(x) x + 1
-  ) +
   annotate("text",
            x = 0.1, y = 0.1,
            size = 4,
            label = p_label2, parse = TRUE, hjust = 0) +
   guides(color = guide_legend(nrow = 1))
+
 
 # ----------------------
 # Supplementary Figure 1
@@ -726,8 +712,55 @@ plot1 =
     panel.grid = element_blank()
   )
 
+
 # ----------------------
 # Supplementary Figure 2
+# ----------------------
+
+g <- ggplot(df1, aes(x = infection, y = interval, group = infection, fill = infection)) +
+  geom_jitter(width = 0.2,
+              size = 0.2,
+              alpha = 0.5,
+              color = "black") +
+  geom_boxplot(varwidth = TRUE,
+               alpha = 0.7,
+               color = "black",
+               outlier.shape = NA,
+               notch = FALSE, 
+               notchwidth = 0.5,
+               outlier.color = "red",
+               outlier.size = 2
+  ) +
+  stat_compare_means(method = "wilcox.test", 
+                     comparisons = list(c("non-FN", "FN")),
+                     p.adjust.method = "BH",
+                     paired = FALSE,
+                     label = "p.signif"
+  ) +
+  labs(
+    y = "Cycle interval",
+    x = "Observed"
+  ) +
+  scale_x_discrete(labels = n) +
+  scale_y_continuous(breaks = c(0, 5, 10, 15, 20, 25, 30)) +
+  scale_fill_manual(values = c("#E41A1C", "#377EB8")) +
+  theme_bw() +
+  theme(
+    axis.text.x = element_text(size = 12, colour = "black"),
+    axis.text.y = element_text(size = 12, colour = "black"),
+    axis.title = element_text(size = 14, colour = "black", face = "bold"),
+    axis.line = element_line(colour = "black"),
+    plot.title = element_text(size = 14, face = "bold", colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    panel.background = element_blank(),
+    legend.position = "none"
+  )
+
+
+# ----------------------
+# Supplementary Figure 4
 # ----------------------
 
 g <- ggplot(df1, aes(x = variable, y = neutropenia_days_050, group = genetic_variable1, fill = genetic_variable1)) +
@@ -771,8 +804,9 @@ g <- ggplot(df1, aes(x = variable, y = neutropenia_days_050, group = genetic_var
     legend.position = "none"
   )
 
+
 # ----------------------
-# Supplementary Figure 3
+# Supplementary Figure 5
 # ----------------------
 
 g <- ggplot(df1, aes(x = genetic_variable1, y = time_to_first_neutropenia, group = genetic_variable1, fill = genetic_variable1)) +
@@ -839,8 +873,9 @@ bloodcount_variable1 <- ggplot(df1,
     panel.grid = element_blank()
   )
 
+
 # ----------------------
-# Supplementary Figure 4
+# Supplementary Figure 6
 # ----------------------
 
 g <- ggplot(df1, aes(x = variable, y = neutropenia_days_050, group = variable, fill = variable)) +
@@ -883,7 +918,7 @@ g <- ggplot(df1, aes(x = variable, y = neutropenia_days_050, group = variable, f
     legend.position = "none"
   )
 
-fit1 = survfit(Surv(follow_up_period, infection) ~ etiology2, data = df) 
+fit1 = survfit(Surv(follow_up_period, infection) ~ variable, data = df) 
 
 pval1 <- surv_pvalue(fit1, data = df)$pval
 p_label1 <- if (pval1 < 0.001) {
@@ -928,10 +963,6 @@ g <- ggsurvplot(fit1,
                 legend = "top")
 
 g$plot = g$plot + 
-  scale_x_continuous(
-    breaks = seq(0, 28, by = 3),
-    labels = function(x) x + 1
-  ) +
   annotate("text",
            x = 0.1, y = 0.1,
            size = 4,
